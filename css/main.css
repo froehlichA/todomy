@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans');
+body {
+  background-color: #f7fff7;
+  color: #191919;
+  font-family: 'Open Sans', 'Segoe UI', Tahoma, 'Geneva', Verdana, sans-serif;
+}
+
+h1 {
+  font-family: 'Montserrat', 'Segoe UI', Tahoma, 'Geneva', Verdana, sans-serif;
+}
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .2s;
+}
+.page-enter, .page-leave-to {
+  opacity: 0;
+}
