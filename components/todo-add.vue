@@ -17,7 +17,7 @@ export default {
   methods: {
     submitTask() {
       if(this.label !== '') {
-        this.$store.commit('addTodo', this.label);
+        this.$store.dispatch('addTodo', this.label);
         this.label = '';
       }
       this.editMode = false;

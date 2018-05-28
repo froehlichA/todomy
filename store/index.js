@@ -8,66 +8,65 @@ export default () => {
     state: {
       todos: [
         {
-          id: 1,
-          label: 'Add some tasks :smile:',
-          done: false
+          id: 0,
+          label: 'Go to sleep soon :moon:',
+          done: false,
+          tags: ['sleep', 'home'],
+          priority: 'low',
+          timestamp: new Date(2018, 8, 28)
         }
       ]
     },
     mutations: {
-      addTodo(state, text) {
-        const chronoData = chrono.parse(text)[0];
-        if (chronoData) text = text.replace(chronoData.text, '');
-
-        const tags = parseTags(text);
-        text = replaceTags(text);
-        const priority = parsePriority(text);
-        text = replacePriority(text);
-
+      addTodo(state, todo) {
         state.todos.push({
-          id: `${text}-${tags}-${
-            chronoData ? chronoData.start.date() : 'no-chrono'
-          }`,
-          label: text,
+          id: todo.id,
+          label: todo.label,
           done: false,
-          tags: tags,
-          priority: priority,
-          timestamp: chronoData && chronoData.start.date()
+          tags: todo.tags,
+          priority: todo.priority,
+          timestamp: todo.timestamp
         });
       },
-      toggleDone(state, id) {
+      deleteTodos(state, fil) {
+        state.todos = state.todos.filter(todo => !fil(todo));
+      },
+      toggleTodo(state, id) {
+        console.log('Toggled id: '+id);
         const index = state.todos.findIndex(td => td.id == id);
         state.todos[index].done = !state.todos[index].done;
-      },
-      deleteAllDone(state) {
-        console.log('Delete all done.');
-        state.todos = state.todos.filter(todo => !todo.done);
       }
     },
-    plugins: [vuexLocal.plugin]
+    actions: {
+      addTodo(context, text) {
+        const chronoData = chrono.parse(text)[0];
+        chronoData && (text = text.replace(chronoData.text, ''));
+        const timestamp = chronoData && chronoData.start.date();
+
+        const allTags = text.match(/\btag:\w+\b/g);
+        const tags = allTags ? allTags.map(tag => tag.replace('tag:', '').toLowerCase()) : [];
+        text = text.replace(/\btag:\w+\b/g, '');
+
+        const allPriorities = text.match(/\btag:\w+\b/g);
+        const priority = allPriorities ? allPriorities.map(priority => priority.replace('priority:', '').toLowerCase()) : [];
+        text = text.replace(/\bpriority:\w+\b/g, '');
+
+        context.commit('addTodo', {
+          id: `${text}-${tags}-${timestamp}`,
+          label: text,
+          tags,
+          priority,
+          timestamp
+        });
+      },
+      deleteAllFinishedTodos: context => context.commit('deleteTodos', todo => todo.done),
+      toggleTodo: (context, id) => context.commit('toggleTodo', id)
+    },
+    getters: {
+      allTodos: state => state.todos,
+      doneTodos: state => state.todos.filter(todo => !todo.done),
+      doneTodosCount: state => state.todos.filter(todo => !todo.done).length,
+    }
+    /*plugins: [vuexLocal.plugin]*/
   });
 };
-
-function parseTags(text) {
-  return text.includes('tag:')
-    ? text
-        .match(/\btag:\w+\b/g)
-        .map(tag => tag.replace('tag:', '').toLowerCase())
-    : [];
-}
-
-function replaceTags(text) {
-  return text.replace(/\btag:\w+\b/g, '');
-}
-
-function parsePriority(text) {
-  return text.includes('priority:')
-    ? text
-        .match(/\bpriority:\w+\b/g)
-        .map(tag => tag.replace('priority:', '').toLowerCase())[0]
-    : 'normal';
-}
-
-function replacePriority(text) {
-  return text.replace(/\bpriority:\w+\b/g, '');
-}

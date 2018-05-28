@@ -5,17 +5,7 @@
       <v-calendar class="calendar" :attributes="calendarTodos" @dayclick="loadTodosAtDay"></v-calendar>
       <div class="todos">
         <h2 class="small title">Todos that day</h2>
-        <small-action></small-action>
-        <div class="todo-container">
-          <transition-group name="fade">
-            <todo
-              v-for="todo in todos"
-              :todo="todo"
-              :key="getKeyForTodo(todo)"
-            ></todo>
-          </transition-group>
-          <p v-if="todos.length == 0" class="empty">Nothing to do here :)</p>
-        </div>
+        <todo-list :todos="todos"></todo-list>
       </div>
     </div>
   </div>
@@ -29,17 +19,8 @@ export default {
   data: () => ({
     todos: []
   }),
-  methods: {
-    loadTodosAtDay(day) {
-      this.todos = this.$store.state.todos.filter(todo => {
-        const dayTodo = moment(todo.timestamp).format("YYYY-MM-DD");
-        const dayCalendar = moment(day.date).format("YYYY-MM-DD");
-        return dayTodo == dayCalendar;
-      });
-    },
-    getKeyForTodo(todo) {
-      return `${todo.label}-${todo.timestamp}`;
-    }
+  created() {
+    this.loadTodosAtDay({ date: Date.now() });
   },
   computed: {
     calendarTodos() {
@@ -70,14 +51,20 @@ export default {
         } else return false;
       }).length;
     }
+  },
+  methods: {
+    loadTodosAtDay(day) {
+      this.todos = this.$store.getters.allTodos.filter(todo => {
+        const dayTodo = moment(todo.timestamp).format("YYYY-MM-DD");
+        const dayCalendar = moment(day.date).format("YYYY-MM-DD");
+        return dayTodo == dayCalendar;
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
-.todo-container {
-  margin-top: 20px;
-}
 .flexbox {
   display: flex;
 }
@@ -88,21 +75,7 @@ export default {
   padding: 0px 15px;
   width: 100%;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.2s;
-  max-height: 230px;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-  max-height: 0px;
-}
-.fade-list-move {
-  transition: transform 1s;
-}
-.small.title {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
+
 .empty {
   color: grey
 }

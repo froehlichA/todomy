@@ -1,12 +1,12 @@
 <template>
   <small>
-    <span class="action color-red" @click="$store.commit('deleteAllDone')">Delete finished tasks</span>
+    <span class="action color-red" @click="$store.dispatch(onClick)">{{ label }}</span>
   </small>
 </template>
 
 <script>
 export default {
-
+  props: ['label', 'onClick']
 }
 </script>
 
@@ -14,14 +14,9 @@ export default {
 .action {
   text-decoration: underline;
   cursor: pointer;
+  margin-right: 20px;
 }
 .color-red {
   color: #ff6b6b;
-}
-.color-green {
-  color: #2ecc71;
-}
-.action:not(:last-child) {
-  margin-right: 20px;
 }
 </style>

@@ -1,67 +1,29 @@
 <template>
   <div>
     <h1>
-      You have {{ openTasks }} open {{ openTasks == 1 ? 'task' : 'tasks'}}. {{ todoEmoji }}
+      You have {{ this.doneTodosCount }} open {{ this.doneTodosCount == 1 ? 'task' : 'tasks'}}. {{ todoEmoji }}
     </h1>
-    <select class="selectTag" v-model="selectedTag">
-      <option
-        v-for="tag in availableTags"
-        :key="tag"
-        :value="tag"
-      >{{ tag }}</option>
-    </select>
-    <small-action></small-action>
-    <div class="todoContainer">
-      <new-todo></new-todo>
-      <transition-group name="fade">
-        <todo
-          v-for="todo in todos"
-          :todo="todo"
-          :key="getKeyForTodo(todo)"
-        ></todo>
-      </transition-group>
-    </div>
+    <text-action
+      label="Delete finished tasks" onClick="deleteAllFinishedTodos"
+    ></text-action>
+    <todo-list withTodoAdd="true" :todos="$store.getters.allTodos"></todo-list>
   </div>
 </template>
 
 <script>
 import * as moment from 'moment';
+import { mapGetters } from 'vuex';
 
 export default {
   data: () => ({
     selectedTag: 'ALL'
   }),
   computed: {
-    todos: function() {
-      let todos = this.$store.state.todos;
-      if (this.selectedTag != 'ALL') {
-        todos = this.$store.state.todos.filter(
-          todo => (todo.tags ? todo.tags.includes(this.selectedTag) : false)
-        );
-      }
-      todos.sort((a, b) => {
-        if(!a.timestamp) return 1;
-        if(!b.timestamp) return -1;
-        return moment(a.timestamp).diff(moment()) - moment(b.timestamp).diff(moment());
-      });
-      return todos;
-    },
-    availableTags: function() {
-      let tags = ['ALL'];
-      this.$store.state.todos.forEach(todo => {
-        if (todo.tags) {
-          todo.tags.forEach(tag => {
-            if(!tags.includes(tag)) tags.push(tag);
-          });
-        }
-      });
-      return tags;
-    },
-    openTasks: function() {
-      return this.$store.state.todos.filter(todo => !todo.done).length;
-    },
+    ...mapGetters([
+      'doneTodosCount'
+    ]),
     todoEmoji: function() {
-      const openTasks = this.openTasks;
+      const openTasks = this.doneTodosCount;
       switch (true) {
         case openTasks == 0:
           return '😍';
@@ -76,11 +38,6 @@ export default {
         default:
           return '😇';
       }
-    }
-  },
-  methods: {
-    getKeyForTodo(todo) {
-      return `${todo.label}-${todo.timestamp}`;
     }
   }
 };
