@@ -9,46 +9,51 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data: () => ({
     editMode: false,
     label: ''
   }),
   methods: {
+    ...mapActions([
+      'addTodo'
+    ]),
     submitTask() {
-      if(this.label !== '') {
-        this.$store.dispatch('addTodo', this.label);
+      if (this.label !== '') {
+        this.addTodo(this.label);
         this.label = '';
       }
       this.editMode = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  .add-todo-button {
-    cursor: pointer;
-    height: 50px;
-  }
+.add-todo-button {
+  cursor: pointer;
+  height: 50px;
+}
 
-  .add-todo {
-    display: inline-block;
-    width: 28px;
-    height: 28px;
-    background-color: #1a535c;
-    color: #f7fff7;
-    line-height: 28px;
-    text-align: center;
-  }
-  .add-todo-tag {
-    margin-left: 10px;
-    color: #1a535c;
-  }
-  .add-todo-input {
-    margin-left: 12px;
-    border: 2px solid #1a535c;
-    font-size: 16px;
-    width: 50%;
-  }
+.add-todo {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  background-color: #1a535c;
+  color: #f7fff7;
+  line-height: 28px;
+  text-align: center;
+}
+.add-todo-tag {
+  margin-left: 10px;
+  color: #1a535c;
+}
+.add-todo-input {
+  margin-left: 12px;
+  border: 2px solid #1a535c;
+  font-size: 16px;
+  width: calc(100% - 46px);
+}
 </style>

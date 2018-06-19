@@ -15,3 +15,15 @@ h1 {
 .page-enter, .page-leave-to {
   opacity: 0;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.2s;
+  max-height: 230px;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+  max-height: 0px;
+}
+.fade-move {
+  transition: transform 0.5s;
+}

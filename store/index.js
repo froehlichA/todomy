@@ -1,6 +1,9 @@
 import Vuex from 'vuex';
 import * as chrono from 'chrono-node';
 import VuexPersistence from 'vuex-persist';
+import * as moment from 'moment';
+import * as emoji from 'node-emoji';
+
 const vuexLocal = new VuexPersistence({ storage: window.localStorage });
 
 export default () => {
@@ -9,11 +12,11 @@ export default () => {
       todos: [
         {
           id: 0,
-          label: 'Go to sleep soon :moon:',
+          label: 'Write some more tasks :white_check_mark:',
           done: false,
-          tags: ['sleep', 'home'],
+          tags: ['tasks', 'writing'],
           priority: 'low',
-          timestamp: new Date(2018, 8, 28)
+          timestamp: new Date()
         }
       ]
     },
@@ -32,9 +35,11 @@ export default () => {
         state.todos = state.todos.filter(todo => !fil(todo));
       },
       toggleTodo(state, id) {
-        console.log('Toggled id: '+id);
         const index = state.todos.findIndex(td => td.id == id);
         state.todos[index].done = !state.todos[index].done;
+      },
+      sortBy(state, fn) {
+        state.todos = state.todos.sort(fn);
       }
     },
     actions: {
@@ -44,29 +49,67 @@ export default () => {
         const timestamp = chronoData && chronoData.start.date();
 
         const allTags = text.match(/\btag:\w+\b/g);
-        const tags = allTags ? allTags.map(tag => tag.replace('tag:', '').toLowerCase()) : [];
+        const tags = allTags
+          ? allTags.map(tag => tag.replace('tag:', '').toLowerCase())
+          : [];
         text = text.replace(/\btag:\w+\b/g, '');
 
-        const allPriorities = text.match(/\btag:\w+\b/g);
-        const priority = allPriorities ? allPriorities.map(priority => priority.replace('priority:', '').toLowerCase()) : [];
+        const allPriorities = text.match(/\bpriority:\w+\b/g);
+        const priority = allPriorities
+          ? allPriorities.map(priority =>
+              priority.replace('priority:', '').toLowerCase()
+            )
+          : [];
         text = text.replace(/\bpriority:\w+\b/g, '');
 
-        context.commit('addTodo', {
+        const todo = {
           id: `${text}-${tags}-${timestamp}`,
-          label: text,
+          label: text.trim(),
           tags,
           priority,
           timestamp
-        });
+        };
+        context.commit('addTodo', todo);
       },
-      deleteAllFinishedTodos: context => context.commit('deleteTodos', todo => todo.done),
-      toggleTodo: (context, id) => context.commit('toggleTodo', id)
+      toggleTodo: (context, id) => context.commit('toggleTodo', id),
+      deleteAllFinishedTodos: context =>
+        context.commit('deleteTodos', todo => todo.done),
+      sortByFinished: context => context.commit('sortBy', (a, b) => {
+        return +a.done - +b.done;
+      }),
+      sortByDate: context => context.commit('sortBy', (a, b) => {
+        if(!a.timestamp) return 1;
+        if(!b.timestamp) return -1;
+        return moment(a.timestamp).diff(moment()) - moment(b.timestamp).diff(moment());
+      })
     },
     getters: {
       allTodos: state => state.todos,
-      doneTodos: state => state.todos.filter(todo => !todo.done),
-      doneTodosCount: state => state.todos.filter(todo => !todo.done).length,
-    }
-    /*plugins: [vuexLocal.plugin]*/
+      openTodos: state => state.todos.filter(todo => !todo.done),
+      allTodosOnDay: state => day =>
+        state.todos
+          .filter(todo => todo.timestamp)
+          .filter(todo => moment(day).isSame(todo.timestamp, 'day')),
+      allTodosInNextMonth: state => 
+        state.todos
+          .filter(todo => todo.timestamp)
+          .filter(todo => moment().isSame(todo.timestamp, 'month')),
+      allTodosInCalendarFormat: (state, getters) =>
+        getters.allTodos.filter(todo => todo.timestamp).map(todo => ({
+          key: todo.id,
+          highlight: {
+            backgroundColor: '#4ecdc4'
+          },
+          contentStyle: {
+            color: '#fafafa',
+            fontWeight: 'bold'
+          },
+          popover: {
+            label: emoji.emojify(todo.label)
+          },
+          dates: todo.timestamp
+        }))
+    },
+    plugins: [vuexLocal.plugin]
   });
 };

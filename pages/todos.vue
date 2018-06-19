@@ -1,29 +1,35 @@
 <template>
   <div>
     <h1>
-      You have {{ this.doneTodosCount }} open {{ this.doneTodosCount == 1 ? 'task' : 'tasks'}}. {{ todoEmoji }}
+      You have {{ this.openTodos.length }} open {{ this.openTodos.length == 1 ? 'task' : 'tasks'}}. {{ todoEmoji }}
     </h1>
     <text-action
-      label="Delete finished tasks" onClick="deleteAllFinishedTodos"
+      label="Sort by Finished"
+      onClick="sortByFinished"
     ></text-action>
-    <todo-list withTodoAdd="true" :todos="$store.getters.allTodos"></todo-list>
+    <text-action
+      label="Sort by Date"
+      onClick="sortByDate"
+    ></text-action>
+    <text-action
+      label="Delete finished tasks"
+      onClick="deleteAllFinishedTodos"
+    ></text-action>
+    <todo-list withTodoAdd="true" :todos="allTodos"></todo-list>
   </div>
 </template>
 
 <script>
-import * as moment from 'moment';
 import { mapGetters } from 'vuex';
 
 export default {
-  data: () => ({
-    selectedTag: 'ALL'
-  }),
   computed: {
     ...mapGetters([
-      'doneTodosCount'
+      'allTodos',
+      'openTodos'
     ]),
     todoEmoji: function() {
-      const openTasks = this.doneTodosCount;
+      const openTasks = this.openTodos.length;
       switch (true) {
         case openTasks == 0:
           return '😍';
@@ -44,17 +50,6 @@ export default {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.2s;
-  max-height: 230px;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-  max-height: 0px;
-}
-.fade-list-move {
-  transition: transform 1s;
-}
 h1 {
   margin-bottom: 0px;
 }

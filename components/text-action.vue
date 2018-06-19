@@ -1,6 +1,6 @@
 <template>
   <small>
-    <span class="action color-red" @click="$store.dispatch(onClick)">{{ label }}</span>
+    <span class="action color red" @click="$store.dispatch(onClick)">{{ label }}</span>
   </small>
 </template>
 
@@ -16,7 +16,7 @@ export default {
   cursor: pointer;
   margin-right: 20px;
 }
-.color-red {
+.color.red {
   color: #ff6b6b;
 }
 </style>

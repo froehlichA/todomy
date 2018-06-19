@@ -1,7 +1,7 @@
 <template>
   <div class="todo container">
     <input class="checkbox" type="checkbox" :id="_uid" :checked="todo.done" />
-    <label :for="_uid" @click="$store.dispatch('toggleTodo', todo.id)"></label>
+    <label class="todo label" :for="_uid" @click="$store.dispatch('toggleTodo', todo.id)"></label>
     <div class="todo text">
       <span class="todo time">
         {{ label }}&nbsp;&nbsp;&nbsp;<span :class="timestampClass">{{ timestamp }}</span>
@@ -29,8 +29,8 @@ export default {
       return {
         timestamp: true,
         danger: this.getDiff() <= 0,
-        success: this.getDiff() > 0 && this.getDiff() <= 1,
-        warning: this.getDiff() > 1 && this.getDiff() <= 7
+        warning: this.getDiff() > 0 && this.getDiff() <= 1,
+        success: this.getDiff() > 1 && this.getDiff() <= 7
       };
     },
     label() {
@@ -56,13 +56,14 @@ export default {
   position: relative;
   width: 100%;
   height: 55px;
+  background: inherit;
 }
 
 .checkbox {
   display: none;
 }
 
-.checkbox + label {
+.todo.label {
   z-index: 15;
   position: absolute;
   left: 0px;
@@ -141,6 +142,7 @@ export default {
   font-weight: bold;
   text-decoration: underline;
   text-decoration-color: #1a535c;
+  float: right;
 }
 .timestamp.danger {
   text-decoration: underline;
