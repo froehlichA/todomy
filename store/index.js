@@ -15,7 +15,6 @@ export default () => {
           label: 'Write some more tasks :white_check_mark:',
           done: false,
           tags: ['tasks', 'writing'],
-          priority: 'low',
           timestamp: new Date()
         }
       ]
@@ -27,7 +26,6 @@ export default () => {
           label: todo.label,
           done: false,
           tags: todo.tags,
-          priority: todo.priority,
           timestamp: todo.timestamp
         });
       },
@@ -54,21 +52,13 @@ export default () => {
           : [];
         text = text.replace(/\btag:\w+\b/g, '');
 
-        const allPriorities = text.match(/\bpriority:\w+\b/g);
-        const priority = allPriorities
-          ? allPriorities.map(priority =>
-              priority.replace('priority:', '').toLowerCase()
-            )
-          : [];
-        text = text.replace(/\bpriority:\w+\b/g, '');
-
         const todo = {
           id: `${text}-${tags}-${timestamp}`,
           label: text.trim(),
           tags,
-          priority,
           timestamp
         };
+        console.log(todo);
         context.commit('addTodo', todo);
       },
       toggleTodo: (context, id) => context.commit('toggleTodo', id),
@@ -85,6 +75,7 @@ export default () => {
     },
     getters: {
       allTodos: state => state.todos,
+      doneTodos: state => state.todos.filter(todo => todo.done),
       openTodos: state => state.todos.filter(todo => !todo.done),
       allTodosOnDay: state => day =>
         state.todos

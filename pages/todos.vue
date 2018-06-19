@@ -4,14 +4,15 @@
       You have {{ this.openTodos.length }} open {{ this.openTodos.length == 1 ? 'task' : 'tasks'}}. {{ todoEmoji }}
     </h1>
     <text-action
-      label="Sort by Finished"
-      onClick="sortByFinished"
-    ></text-action>
-    <text-action
       label="Sort by Date"
       onClick="sortByDate"
     ></text-action>
     <text-action
+      label="Sort by Status"
+      onClick="sortByFinished"
+    ></text-action>
+    <text-action
+      v-if="doneTodos.length >= 1"
       label="Delete finished tasks"
       onClick="deleteAllFinishedTodos"
     ></text-action>
@@ -26,7 +27,8 @@ export default {
   computed: {
     ...mapGetters([
       'allTodos',
-      'openTodos'
+      'openTodos',
+      'doneTodos'
     ]),
     todoEmoji: function() {
       const openTasks = this.openTodos.length;

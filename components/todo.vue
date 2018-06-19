@@ -4,7 +4,8 @@
     <label class="todo label" :for="_uid" @click="$store.dispatch('toggleTodo', todo.id)"></label>
     <div class="todo text">
       <span class="todo time">
-        {{ label }}&nbsp;&nbsp;&nbsp;<span :class="timestampClass">{{ timestamp }}</span>
+        <span>{{ label }}</span>
+        <span :class="timestampClass">{{ timestamp }}</span>
       </span>
       <p class="todo tags container">
         <span class="todo tags" v-for="(tag, index) in todo.tags" :key="getKeyForTag(tag)">
@@ -26,11 +27,12 @@ export default {
       return this.todo.timestamp ? moment(this.todo.timestamp).fromNow() : '';
     },
     timestampClass() {
+      const diff = this.getDiff();
       return {
         timestamp: true,
-        danger: this.getDiff() <= 0,
-        warning: this.getDiff() > 0 && this.getDiff() <= 1,
-        success: this.getDiff() > 1 && this.getDiff() <= 7
+        danger: diff <= 0,
+        warning: diff > 0 && diff <= 1,
+        success: diff > 1 && diff <= 7
       };
     },
     label() {

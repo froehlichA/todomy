@@ -46,9 +46,21 @@ export default {
   line-height: 28px;
   text-align: center;
 }
+.add-todo:hover {
+  background-color: #0f2f34;
+}
+.add-todo:active {
+  background-color: #133b42;
+}
 .add-todo-tag {
   margin-left: 10px;
   color: #1a535c;
+}
+.add-todo-tag:hover {
+  color: #0f2f34;
+}
+.add-todo-tag:active {
+  color: #133b42;
 }
 .add-todo-input {
   margin-left: 12px;

@@ -27,3 +27,6 @@ h1 {
 .fade-move {
   transition: transform 0.5s;
 }
+.calendar {
+  background-color: inherit !important;
+}
