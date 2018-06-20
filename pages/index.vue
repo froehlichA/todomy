@@ -62,7 +62,7 @@
             Thanks for using TodoMy! 👨‍💻
           </h4>
           <p class="no-margin top bottom">
-            You can view the source code on github.
+            <a class="normal-link" href="https://github.com/froehlichA/todomy">You can view the source code here.</a>
           </p>
         </div>
       </div>
@@ -132,5 +132,8 @@ export default {
 }
 .no-margin.bottom {
   margin-bottom: 0;
+}
+.normal-link {
+  color: inherit;
 }
 </style>
