@@ -97,8 +97,8 @@ export default () => {
         state.todos
           .filter(todo => todo.timestamp)
           .filter(todo => moment().isSame(todo.timestamp, 'month')),
-      allTodosInCalendarFormat: (state, getters) =>
-        getters.allTodos.filter(todo => todo.timestamp).map(todo => ({
+      allTodosInCalendarFormat: state =>
+        state.todos.filter(todo => todo.timestamp).map(todo => ({
           key: todo.id,
           highlight: {
             backgroundColor: '#4ecdc4'
@@ -112,6 +112,16 @@ export default () => {
           },
           dates: todo.timestamp
         })),
+      allTodosCategories: state => {
+        const tags = {};
+        for(const todo of state.todos) {
+          for(const tag of todo.tags) {
+            tags[tag] ? tags[tag]++ : tags[tag] = 1;
+          }
+        }
+        console.log(tags);
+        return tags;
+      },
       statsFinishedTodos: state => state.stats.finishedTodos,
       statsAddedTodos: state => state.stats.addedTodos
     },

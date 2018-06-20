@@ -33,12 +33,40 @@
           <h4 class="no-margin bottom">
             You have checked off {{ statsFinishedTodos }} {{ statsFinishedTodos.length != 1 ? 'tasks' : 'task' }}. 🏁
           </h4>
-          <p v-if="firstTodo" class="no-margin top bottom">
+          <p class="no-margin top bottom">
             ... and added {{ statsAddedTodos }} {{ statsAddedTodos.length != 1 ? 'tasks' : 'task' }} since you joined.
           </p>
         </div>
       </div>
-  </div>
+    </div>
+    <div class="row">
+      <div>
+        <div class="card bg violet">
+          <div class="icon">
+            <i class="fas fa-tags fa-5x fa-fw fa-pull-left" data-fa-transform="shrink-4 right-1"></i>
+          </div>
+          <h4 class="no-margin bottom">
+            You have tasks in {{ Object.keys(allTodosCategories).length }} {{ Object.keys(allTodosCategories).length != 1 ? 'categories' : 'category' }}. 🔖
+          </h4>
+          <p class="no-margin top bottom">
+            Everything is neatly organised!
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="card bg yellow">
+          <div class="icon">
+            <i class="far fa-smile fa-5x fa-fw fa-pull-left"></i>
+          </div>
+          <h4 class="no-margin bottom">
+            Thanks for using TodoMy! 👨‍💻
+          </h4>
+          <p class="no-margin top bottom">
+            You can view the source code on github.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -50,6 +78,7 @@ export default {
   computed: {
     ...mapGetters([
       'allTodos',
+      'allTodosCategories',
       'openTodos',
       'firstTodo',
       'statsFinishedTodos',
@@ -59,7 +88,7 @@ export default {
       return emoji.emojify(this.firstTodo.label);
     }
   }
-}
+};
 </script>
 
 
@@ -80,13 +109,20 @@ export default {
   padding: 10px;
   overflow-y: hidden;
 }
-.card.bg.blue {
-  background: linear-gradient(-136deg, #3959C5, #708AAF);
+.card.bg {
   color: white;
 }
+.card.bg.blue {
+  background: linear-gradient(19deg, #5673C6, #028ACA);
+}
 .card.bg.green {
-  background: linear-gradient(-68deg, #4EBE71, #07AB3D);
-  color: white;
+  background: linear-gradient(-68deg, #4ebe71, #07ab3d);
+}
+.card.bg.violet {
+  background: linear-gradient(-98deg, #fd3d57, #e02974);
+}
+.card.bg.yellow {
+  background: linear-gradient(-152deg, #c9983a, #cd9f47);
 }
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);

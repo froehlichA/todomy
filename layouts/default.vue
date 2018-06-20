@@ -9,7 +9,7 @@
       <div class="header-item header-middle">
         <nuxt-link class="header-link" to="/">
           <i class="header-icon fas fa-list" />
-          <span class="header-icon-description">Activity</span>
+          <span class="header-icon-description">Quick View</span>
         </nuxt-link>
         <nuxt-link class="header-link" to="/todos">
           <i class="header-icon far fa-check-circle"></i>
@@ -21,8 +21,8 @@
         </nuxt-link>
       </div>
       <div class="header-item header-right">
-        <nuxt-link class="header-link" to="/profile">
-          <img class="header-avatar" src="https://randomuser.me/api/portraits/men/83.jpg" alt="Avatar" />
+        <nuxt-link class="header-link" to="/">
+          <img class="header-avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Icons8_flat_businessman.svg/1024px-Icons8_flat_businessman.svg.png" alt="Avatar" />
         </nuxt-link>
       </div>
     </div>
