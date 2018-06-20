@@ -16,3 +16,5 @@ Vue.component('text-action', TextAction);
 Vue.use(VCalendar, {
   firstDayOfWeek: 2
 });
+
+require('../js/fontawesome.js');

@@ -17,7 +17,11 @@ export default () => {
           tags: ['tasks', 'writing'],
           timestamp: new Date()
         }
-      ]
+      ],
+      stats: {
+        addedTodos: 0,
+        finishedTodos: 0
+      }
     },
     mutations: {
       addTodo(state, todo) {
@@ -53,17 +57,22 @@ export default () => {
         text = text.replace(/\btag:\w+\b/g, '');
 
         const todo = {
-          id: `${text}-${tags}-${timestamp}`,
+          id: `${text}-${tags}-${timestamp}-${Math.random()}`,
           label: text.trim(),
           tags,
           timestamp
         };
         console.log(todo);
         context.commit('addTodo', todo);
+        context.state.stats.addedTodos++;
       },
       toggleTodo: (context, id) => context.commit('toggleTodo', id),
       deleteAllFinishedTodos: context =>
-        context.commit('deleteTodos', todo => todo.done),
+        context.commit('deleteTodos', todo => {
+          const done = todo.done;
+          if(done) context.state.stats.finishedTodos++;
+          return done;
+        }),
       sortByFinished: context => context.commit('sortBy', (a, b) => {
         return +a.done - +b.done;
       }),
@@ -77,6 +86,9 @@ export default () => {
       allTodos: state => state.todos,
       doneTodos: state => state.todos.filter(todo => todo.done),
       openTodos: state => state.todos.filter(todo => !todo.done),
+      firstTodo: state =>
+        state.todos
+          .sort((a, b) => b.timestamp - a.timestamp)[0],
       allTodosOnDay: state => day =>
         state.todos
           .filter(todo => todo.timestamp)
@@ -99,7 +111,9 @@ export default () => {
             label: emoji.emojify(todo.label)
           },
           dates: todo.timestamp
-        }))
+        })),
+      statsFinishedTodos: state => state.stats.finishedTodos,
+      statsAddedTodos: state => state.stats.addedTodos
     },
     plugins: [vuexLocal.plugin]
   });

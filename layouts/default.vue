@@ -19,10 +19,6 @@
           <i class="header-icon far fa-calendar"></i>
           <span class="header-icon-description">Calendar</span>
         </nuxt-link>
-        <nuxt-link class="header-link" to="/settings">
-          <i class="header-icon fas fa-sliders-h"></i>
-          <span class="header-icon-description">Settings</span>
-        </nuxt-link>
       </div>
       <div class="header-item header-right">
         <nuxt-link class="header-link" to="/profile">

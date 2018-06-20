@@ -42,6 +42,7 @@ export default {
   width: 28px;
   height: 28px;
   background-color: #1a535c;
+  border-radius: 1px;
   color: #f7fff7;
   line-height: 28px;
   text-align: center;
