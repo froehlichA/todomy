@@ -2,7 +2,7 @@
   <div>
     <h1>You have {{ allTodosInNextMonth.length }} {{ allTodosInNextMonth.length == 1 ? 'task' : 'tasks'}} in the next month. 👏</h1>
     <div class="flexbox">
-      <v-calendar class="calendar" :attributes="allTodosInCalendarFormat" @dayclick="loadTodosAtDay"></v-calendar>
+      <v-calendar v-if="processBrowser" class="calendar" :attributes="allTodosInCalendarFormat" @dayclick="loadTodosAtDay"></v-calendar>
       <div class="todos">
         <h2 class="small title">Todos on {{ formattedDay }}</h2>
         <todo-list :todos="todos"></todo-list>
@@ -31,6 +31,9 @@ export default {
     ]),
     formattedDay() {
       return moment(this.day).format('MMMM Do');
+    },
+    processBrowser() {
+      return !!process.browser;
     }
   },
   methods: {

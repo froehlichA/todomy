@@ -4,7 +4,10 @@ import VuexPersistence from 'vuex-persist';
 import * as moment from 'moment';
 import * as emoji from 'node-emoji';
 
-const vuexLocal = new VuexPersistence({ storage: window.localStorage });
+let vuexLocal;
+if(process.browser) {
+  vuexLocal = new VuexPersistence({ storage: window.localStorage });
+}
 
 export default () => {
   return new Vuex.Store({
@@ -125,6 +128,6 @@ export default () => {
       statsFinishedTodos: state => state.stats.finishedTodos,
       statsAddedTodos: state => state.stats.addedTodos
     },
-    plugins: [vuexLocal.plugin]
+    plugins: process.browser ? [vuexLocal.plugin] : []
   });
 };

@@ -17,4 +17,6 @@ Vue.use(VCalendar, {
   firstDayOfWeek: 2
 });
 
-require('../js/fontawesome.js');
+if(process.browser) {
+  require('../js/fontawesome.js');
+}
